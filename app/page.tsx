@@ -11,6 +11,8 @@
 import Link from 'next/link'
 import { getAllEpisodes } from '@/lib/sanity'
 
+export const revalidate = 60
+
 export default async function HomePage() {
   const episodes = await getAllEpisodes()
 

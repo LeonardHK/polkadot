@@ -16,6 +16,9 @@ import EpisodeReader from '@/components/episode-reader'
 // 빌드 시 생성되지 않은 slug도 런타임에 처리
 export const dynamicParams = true
 
+// 60초마다 자동 갱신
+export const revalidate = 60
+
 // 페이지 Props 타입 정의
 interface EpisodePageProps {
   params: Promise<{

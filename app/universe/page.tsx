@@ -15,6 +15,9 @@ import Link from 'next/link'
 import ThemeToggle from '@/components/theme-toggle'
 import EpisodeHub from '@/components/episode-hub'
 
+// Sanity에서 콘텐츠 변경 시 60초 후 자동 갱신 (Redeploy 없이 새 에피소드 반영)
+export const revalidate = 60
+
 export const metadata: Metadata = {
   title: '유니버스 | 폴카도트',
   description: '폴카도트 시리즈의 모든 에피소드를 만나보세요',
