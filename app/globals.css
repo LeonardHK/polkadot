@@ -178,10 +178,17 @@
   font-size: var(--reader-body-size);
   line-height: var(--reader-line-height);
   margin-bottom: var(--reader-paragraph-gap);
-  text-align: justify;
+  text-align: left;
   word-break: keep-all;
   text-indent: var(--reader-indent);
   letter-spacing: 0.01em;
+}
+
+/* 데스크톱에서만 양쪽 정렬 (모바일은 글자 간격 문제 방지) */
+@media (min-width: 640px) {
+  .reader-paragraph {
+    text-align: justify;
+  }
 }
 
 /* 리더 본문 컨테이너 — 최대 너비 제한으로 가독성 확보 */
