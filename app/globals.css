@@ -58,10 +58,11 @@
   --reader-progress: #1a1a1a;
 
   /* 리더 타이포그래피 */
-  --reader-line-height: 1.9;
-  --reader-paragraph-gap: 1.5em;
-  --reader-body-size: 1rem;
-  --reader-indent: 0em;
+  --reader-line-height: 2.05;
+  --reader-paragraph-gap: 1.8em;
+  --reader-body-size: 1.05rem;
+  --reader-indent: 1em;
+  --reader-max-width: 38em;
 }
 
 .dark {
@@ -180,6 +181,14 @@
   text-align: justify;
   word-break: keep-all;
   text-indent: var(--reader-indent);
+  letter-spacing: 0.01em;
+}
+
+/* 리더 본문 컨테이너 — 최대 너비 제한으로 가독성 확보 */
+.reader-content {
+  max-width: var(--reader-max-width);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* 리더 작가의 말 */
