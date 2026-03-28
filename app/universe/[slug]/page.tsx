@@ -24,10 +24,11 @@ interface EpisodePageProps {
 }
 
 // 정적 경로 생성
+// Next.js가 자동으로 URL 인코딩하므로 slug를 그대로 반환
 export async function generateStaticParams() {
   const slugs = await getAllEpisodeSlugs()
   return slugs.map((slug) => ({
-    slug: encodeURIComponent(slug),
+    slug,
   }))
 }
 
