@@ -111,7 +111,43 @@ export function imageUrl(
   return url
 }
 
+// 사이트 설정 타입
+export interface SiteSettings {
+  siteTitle: string
+  siteSubtitle?: string
+  heroText?: string
+  ctaText?: string
+  collectionTitle: string
+  collectionDescription?: string
+}
+
+// 기본값 (설정 문서가 아직 없을 때)
+export const defaultSettings: SiteSettings = {
+  siteTitle: '폴카도트',
+  siteSubtitle: '한국어 단편 소설',
+  heroText: '한 편의 이야기가 당신을 기다립니다',
+  ctaText: '이야기 시작하기',
+  collectionTitle: '유니버스',
+  collectionDescription: '',
+}
+
 // ── 데이터 페칭 함수 ──
+
+/**
+ * 사이트 설정 조회 (싱글톤)
+ */
+export async function getSiteSettings(): Promise<SiteSettings> {
+  const query = `*[_type == "siteSettings" && _id == "siteSettings"][0] {
+    siteTitle,
+    siteSubtitle,
+    heroText,
+    ctaText,
+    collectionTitle,
+    collectionDescription
+  }`
+  const result = await sanityClient.fetch(query)
+  return result || defaultSettings
+}
 
 /**
  * 모든 공개된 에피소드 목록 (허브 페이지용)

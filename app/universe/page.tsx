@@ -1,33 +1,24 @@
 /**
  * 에피소드 허브 페이지 (/universe)
- * 모든 공개된 에피소드를 카드 그리드로 표시
- *
- * [변경사항]
- * - 서버/클라이언트 컴포넌트 분리 (장르 필터는 클라이언트)
- * - 다크모드 토글 추가
- * - 장르 필터 UI 추가
- * - 디자인 업그레이드
+ * '작품 목록 이름'은 Sanity Studio의 사이트 설정에서 관리합니다.
  */
 
-import { getAllEpisodes, getAvailableGenres } from '@/lib/sanity'
-import { Metadata } from 'next'
+import { getAllEpisodes, getAvailableGenres, getSiteSettings, defaultSettings } from '@/lib/sanity'
 import Link from 'next/link'
 import ThemeToggle from '@/components/theme-toggle'
 import EpisodeHub from '@/components/episode-hub'
 
-// Sanity에서 콘텐츠 변경 시 60초 후 자동 갱신 (Redeploy 없이 새 에피소드 반영)
+// Sanity에서 콘텐츠 변경 시 60초 후 자동 갱신
 export const revalidate = 60
 
-export const metadata: Metadata = {
-  title: '유니버스 | 폴카도트',
-  description: '폴카도트 시리즈의 모든 에피소드를 만나보세요',
-}
-
 export default async function UniversePage() {
-  const [episodes, genres] = await Promise.all([
+  const [episodes, genres, settings] = await Promise.all([
     getAllEpisodes(),
     getAvailableGenres(),
+    getSiteSettings(),
   ])
+
+  const s = { ...defaultSettings, ...settings }
 
   return (
     <main className="min-h-screen bg-background">
@@ -46,10 +37,10 @@ export default async function UniversePage() {
                 홈으로
               </Link>
               <h1 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                유니버스
+                {s.collectionTitle}
               </h1>
               <p className="mt-2 text-sm text-muted-foreground">
-                {episodes.length}편의 이야기
+                {s.collectionDescription || `${episodes.length}편의 이야기`}
               </p>
             </div>
             <ThemeToggle />

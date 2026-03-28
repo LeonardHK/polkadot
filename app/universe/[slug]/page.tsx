@@ -10,7 +10,7 @@
 
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
-import { getEpisodeBySlug, getNextEpisode, getAllEpisodeSlugs } from '@/lib/sanity'
+import { getEpisodeBySlug, getNextEpisode, getAllEpisodeSlugs, getSiteSettings, defaultSettings } from '@/lib/sanity'
 import EpisodeReader from '@/components/episode-reader'
 
 // 빌드 시 생성되지 않은 slug도 런타임에 처리
@@ -47,8 +47,11 @@ export async function generateMetadata({ params }: EpisodePageProps): Promise<Me
     }
   }
 
+  const settings = await getSiteSettings()
+  const siteTitle = settings.siteTitle || defaultSettings.siteTitle
+
   return {
-    title: `${episode.title} | 폴카도트`,
+    title: `${episode.title} | ${siteTitle}`,
     description: episode.logline || `에피소드 ${episode.episodeNumber}: ${episode.title}`,
     openGraph: {
       title: episode.title,
