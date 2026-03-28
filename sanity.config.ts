@@ -23,15 +23,17 @@ export default defineConfig({
     structureTool({
       structure: (S) =>
         S.list()
+          .id('root')
           .title('콘텐츠')
           .items([
             S.listItem()
+              .id('episode')
               .title('에피소드')
               .schemaType('episode')
               .child(
                 S.documentTypeList('episode')
+                  .id('episodeList')
                   .title('에피소드 목록')
-                  .defaultOrdering([{ field: 'episodeNumber', direction: 'asc' }])
               ),
           ]),
     }),
