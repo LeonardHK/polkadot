@@ -23,50 +23,54 @@ interface EpisodeReaderProps {
 }
 
 /**
- * 긴 텍스트를 적절한 길이의 단락으로 분할
- * 마침표(. ) 기준으로 자연스러운 끊김을 만든다.
- * 이미 적절한 길이의 단락이면 그대로 반환.
+ * Sanity 데이터의 단락을 표시용 단락으로 변환
+ * 1) 작가가 넣은 줄바꿈(\n)을 단락 구분으로 존중
+ * 2) 줄바꿈 없는 긴 덩어리만 마침표 기준으로 보조 분할
  */
 function splitIntoParagraphs(paragraphs: string[]): string[] {
   const result: string[] = []
-  const TARGET_LENGTH = 200 // 약 200자마다 끊기
+  const TARGET_LENGTH = 300
 
   for (const p of paragraphs) {
-    const trimmed = p.trim()
-    if (!trimmed) continue
+    if (!p) continue
 
-    // 이미 적절한 길이면 그대로
-    if (trimmed.length <= TARGET_LENGTH * 1.5) {
-      result.push(trimmed)
-      continue
-    }
+    // 줄바꿈으로 먼저 분리 (작가의 의도 존중)
+    const lines = p.split(/\n/)
 
-    // 긴 텍스트: 마침표+공백 기준으로 분할
-    let remaining = trimmed
-    let buffer = ''
+    for (const line of lines) {
+      const trimmed = line.trim()
+      if (!trimmed) continue // 빈 줄은 건너뛰기 (단락 간격으로 표현됨)
 
-    while (remaining.length > 0) {
-      // 마침표+공백 또는 마침표+끝 찾기
-      const sentenceEnd = remaining.search(/\.\s/)
-
-      if (sentenceEnd === -1) {
-        // 더 이상 마침표가 없으면 남은 텍스트 추가
-        buffer += remaining
-        remaining = ''
-      } else {
-        buffer += remaining.slice(0, sentenceEnd + 1)
-        remaining = remaining.slice(sentenceEnd + 1).trimStart()
+      // 적절한 길이면 그대로
+      if (trimmed.length <= TARGET_LENGTH) {
+        result.push(trimmed)
+        continue
       }
 
-      // 버퍼가 충분히 길면 단락으로 분리
-      if (buffer.length >= TARGET_LENGTH && remaining.length > 0) {
+      // 긴 텍스트: 마침표 기준 보조 분할
+      let remaining = trimmed
+      let buffer = ''
+
+      while (remaining.length > 0) {
+        const sentenceEnd = remaining.search(/\.\s/)
+
+        if (sentenceEnd === -1) {
+          buffer += remaining
+          remaining = ''
+        } else {
+          buffer += remaining.slice(0, sentenceEnd + 1)
+          remaining = remaining.slice(sentenceEnd + 1).trimStart()
+        }
+
+        if (buffer.length >= TARGET_LENGTH && remaining.length > 0) {
+          result.push(buffer.trim())
+          buffer = ''
+        }
+      }
+
+      if (buffer.trim()) {
         result.push(buffer.trim())
-        buffer = ''
       }
-    }
-
-    if (buffer.trim()) {
-      result.push(buffer.trim())
     }
   }
 
