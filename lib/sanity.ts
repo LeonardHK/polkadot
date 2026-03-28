@@ -16,7 +16,7 @@ export const sanityClient = createClient({
   projectId: 'vmpzfrqm',
   dataset: 'production',
   apiVersion: '2024-01-01',
-  useCdn: true,
+  useCdn: false, // 콘텐츠 변경 즉시 반영을 위해 CDN 캐시 비활성화
 })
 
 // ── 타입 정의 ──
