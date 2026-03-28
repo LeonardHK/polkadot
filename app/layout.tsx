@@ -1,11 +1,16 @@
 /**
  * 루트 레이아웃 컴포넌트
  * 한국어 단편 소설 웹앱의 전역 레이아웃 설정
+ *
+ * [변경사항]
+ * - ThemeProvider 적용 (다크모드 지원)
+ * - suppressHydrationWarning 추가 (next-themes 요구사항)
  */
 
 import type { Metadata, Viewport } from 'next'
 import { Noto_Serif_KR, Geist } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
 
 // 한국어 본문용 폰트 (Noto Serif KR)
@@ -52,7 +57,10 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#faf9f6',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#faf9f6' },
+    { media: '(prefers-color-scheme: dark)', color: '#1a1917' },
+  ],
 }
 
 export default function RootLayout({
@@ -61,9 +69,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ko" className={`${notoSerifKR.variable} ${geist.variable}`}>
+    <html lang="ko" className={`${notoSerifKR.variable} ${geist.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased">
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

@@ -1,6 +1,12 @@
 /**
  * 전역 스타일 설정
  * 한국어 단편 소설 웹앱의 디자인 토큰 및 기본 스타일
+ *
+ * [변경사항]
+ * - 다크모드 리더 색상 토큰 추가
+ * - 문학적 타이포그래피 토큰 (리더 전용) 추가
+ * - 스크롤바 커스텀 스타일
+ * - 리더 페이지 전용 스타일 강화
  */
 
 @import 'tailwindcss';
@@ -9,24 +15,24 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* 기본 색상 토큰 */
-  --background: oklch(0.98 0.005 90); /* #faf9f6 에 가까운 따뜻한 흰색 */
-  --foreground: oklch(0.15 0 0); /* #1a1a1a 에 가까운 진한 검정 */
-  --card: oklch(1 0 0);
+  /* 기본 색상 토큰 — 따뜻한 크림톤 */
+  --background: oklch(0.98 0.005 90);
+  --foreground: oklch(0.15 0 0);
+  --card: oklch(0.97 0.004 90);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  --secondary: oklch(0.95 0.004 90);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
+  --muted: oklch(0.95 0.004 90);
+  --muted-foreground: oklch(0.50 0 0);
+  --accent: oklch(0.95 0.004 90);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
+  --border: oklch(0.90 0.005 90);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
@@ -48,27 +54,34 @@
   --reader-bg: #faf9f6;
   --reader-text: #1a1a1a;
   --reader-muted: #666666;
-  --reader-border: #e5e5e5;
+  --reader-border: #e8e5e0;
+  --reader-progress: #1a1a1a;
+
+  /* 리더 타이포그래피 */
+  --reader-line-height: 1.9;
+  --reader-paragraph-gap: 1.5em;
+  --reader-body-size: 1rem;
+  --reader-indent: 0em;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
+  --background: oklch(0.13 0.005 80);
+  --foreground: oklch(0.88 0.005 80);
+  --card: oklch(0.16 0.005 80);
+  --card-foreground: oklch(0.88 0.005 80);
   --popover: oklch(0.145 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.88 0.005 80);
+  --primary-foreground: oklch(0.15 0 0);
+  --secondary: oklch(0.20 0.005 80);
+  --secondary-foreground: oklch(0.88 0.005 80);
+  --muted: oklch(0.20 0.005 80);
+  --muted-foreground: oklch(0.60 0 0);
+  --accent: oklch(0.20 0.005 80);
+  --accent-foreground: oklch(0.88 0.005 80);
   --destructive: oklch(0.396 0.141 25.723);
   --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
+  --border: oklch(0.24 0.005 80);
   --input: oklch(0.269 0 0);
   --ring: oklch(0.439 0 0);
   --chart-1: oklch(0.488 0.243 264.376);
@@ -84,6 +97,13 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+
+  /* 다크모드 리더 색상 — 눈 피로도를 줄이는 따뜻한 어둠 */
+  --reader-bg: #1a1917;
+  --reader-text: #d4d0c8;
+  --reader-muted: #8a8680;
+  --reader-border: #2e2d2a;
+  --reader-progress: #d4d0c8;
 }
 
 @theme inline {
@@ -137,12 +157,39 @@
   }
 }
 
-/* 리더 페이지 전용 스타일 */
+/* ── 리더 페이지 전용 스타일 ── */
+
 .reader-container {
   font-family: var(--font-noto-serif-kr), 'Noto Serif KR', serif;
-  line-height: 1.9;
+  line-height: var(--reader-line-height);
   background-color: var(--reader-bg);
   color: var(--reader-text);
+}
+
+.reader-container header,
+.reader-container nav {
+  background-color: var(--reader-bg);
+  border-color: var(--reader-border);
+}
+
+/* 리더 본문 단락 */
+.reader-paragraph {
+  font-size: var(--reader-body-size);
+  line-height: var(--reader-line-height);
+  margin-bottom: var(--reader-paragraph-gap);
+  text-align: justify;
+  word-break: keep-all;
+  text-indent: var(--reader-indent);
+}
+
+/* 리더 작가의 말 */
+.reader-author-note {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--reader-muted);
+  border-top: 1px solid var(--reader-border);
+  padding-top: 2rem;
+  margin-top: 3rem;
 }
 
 /* 스와이프 제스처 시 부드러운 전환 */
@@ -160,4 +207,29 @@
 /* 진행률 바 애니메이션 */
 .progress-bar {
   transition: width 0.3s ease-out;
+  background-color: var(--reader-progress);
+}
+
+/* ── 스크롤바 ── */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--reader-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--reader-muted);
+}
+
+/* ── 선택 하이라이트 ── */
+::selection {
+  background-color: oklch(0.8 0.02 80 / 0.3);
+}
+.dark ::selection {
+  background-color: oklch(0.4 0.02 80 / 0.4);
 }
